@@ -1,4 +1,5 @@
 import Foundation
+import MagniumSettings
 import LottieSettings
 import UIKit
 import AVFoundation
@@ -325,6 +326,10 @@ public class ChatMessageAnimatedStickerItemNode: ChatMessageItemView {
             self.view.disablesInteractiveTransitionGestureRecognizer = false
         }
         replyRecognizer.shouldBegin = { [weak self] in
+            // Magnium: "Без свайпа для ответа".
+            if MagniumSettings.isOn(.disableSwipeToReply) {
+                return false
+            }
             if let strongSelf = self, let item = strongSelf.item {
                 if strongSelf.selectionNode != nil {
                     return false

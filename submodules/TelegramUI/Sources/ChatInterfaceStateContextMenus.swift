@@ -2479,6 +2479,8 @@ func contextMenuForChatPresentationInterfaceState(chatPresentationInterfaceState
             }
         }
         
+        actions.append(contentsOf: magniumPluginMessageMenuItems(messages: messages))
+        
         return ContextController.Items(content: .list(actions), tip: nil)
     }
 }

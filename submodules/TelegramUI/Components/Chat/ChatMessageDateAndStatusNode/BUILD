@@ -14,6 +14,7 @@ swift_library(
     deps = [
         "//submodules/AsyncDisplayKit",
         "//submodules/TelegramCore",
+        "//submodules/Magnium/MagniumSettings:MagniumSettings",
         "//submodules/Display",
         "//submodules/SSignalKit/SwiftSignalKit",
         "//submodules/TelegramUIPreferences",

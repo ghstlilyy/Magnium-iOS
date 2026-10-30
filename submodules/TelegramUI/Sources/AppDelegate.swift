@@ -48,6 +48,7 @@ import NavigationBarComponent
 import NavigationExpansionTransition
 import ContextUI
 import ContextControllerImpl
+import MagniumPlugins
 import ProxyServerPreviewScreen
 import WalletContext
 import WalletSendScreen
@@ -354,7 +355,9 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
         precondition(!testIsLaunched)
         testIsLaunched = true
         CrashReportCollector.shared.start()
-        
+        // Before any Telegram UI exists, so that plugins can act from the very first frame.
+        MagniumPluginManager.shared.start()
+
         let _ = voipTokenPromise.get().start(next: { token in
             self.voipDeviceToken.set(.single(token))
         })
@@ -573,8 +576,8 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
         try! PasscodeEnvironment.shared.configure(PasscodeConfiguration(appGroupIdentifier: appGroupName, processRole: .mainApp, biometricKeychainService: walletBiometricKeychainService), privateAccessGroup: {
             BuildConfig.keychainAccessGroup(baseAppBundleId: baseAppBundleId)
         })
-        let maybeAppGroupUrl = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroupName)
-        
+        let maybeAppGroupUrl = magniumAppGroupContainerUrl(appGroupName: appGroupName)
+
         let buildConfig = BuildConfig(baseAppBundleId: baseAppBundleId)
         self.buildConfig = buildConfig
         let signatureDict = BuildConfigExtra.signatureDict()
@@ -1411,6 +1414,7 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
             }
             self.crashReportPromptDisposable.set(nil)
             self.contextValue = context
+            MagniumHostBridge.shared.attach(context: context?.context, rootController: context?.rootController, mainWindow: context?.mainWindow)
             if let context = context {
                 setupLegacyComponents(context: context.context)
                 let isReady = context.isReady.get()

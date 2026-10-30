@@ -1,4 +1,5 @@
 import Foundation
+import MagniumSettings
 import UIKit
 import AsyncDisplayKit
 import Display
@@ -3609,6 +3610,13 @@ public class ChatListItemNode: ItemListRevealOptionsItemNode {
                     if let verificationIconFileId = peer.verificationIconFileId {
                         currentVerifiedIconContent = .animation(content: .customEmoji(fileId: verificationIconFileId), size: CGSize(width: 32.0, height: 32.0), placeholderColor: item.presentationData.theme.list.mediaPlaceholderColor, themeColor: item.presentationData.theme.list.itemAccentColor, loopMode: .count(0))
                     }
+                }
+            }
+            // Magnium: "Без статусов в списке чатов" keeps verification and scam marks only.
+            if MagniumSettings.isOn(.hideChatListStatuses) {
+                currentStatusIconContent = nil
+                if case .premium = currentCredibilityIconContent {
+                    currentCredibilityIconContent = nil
                 }
             }
             if let currentSecretIconImage = currentSecretIconImage {

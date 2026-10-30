@@ -6,6 +6,10 @@ import SwiftSignalKit
 func _internal_markMessageContentAsConsumedInteractively(postbox: Postbox, messageId: MessageId) -> Signal<Void, NoError> {
     return postbox.transaction { transaction -> Void in
         if let message = transaction.getMessage(messageId), message.flags.contains(.Incoming) {
+            // Magnium: a plugin may keep self-destructing media: not consuming it starts no timer and tells no one.
+            if magniumShouldKeepDisappearingContent(message) {
+                return
+            }
             var updateMessage = false
             var updatedAttributes = message.attributes
             

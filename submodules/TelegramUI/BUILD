@@ -66,6 +66,10 @@ swift_library(
     deps = [
         "//submodules/CrashReporting:CrashReporting",
         "//third-party/recaptcha:RecaptchaEnterprise",
+        "//submodules/Magnium/MagniumPlugins:MagniumPlugins",
+        "//submodules/Magnium/MagniumServer:MagniumServer",
+        "//submodules/Magnium/MagniumSettings:MagniumSettings",
+        "//submodules/Magnium/MagniumPluginsUI:MagniumPluginsUI",
         "//submodules/SSignalKit/SwiftSignalKit:SwiftSignalKit",
         "//submodules/SSignalKit/SSignalKit:SSignalKit",
         "//submodules/AsyncDisplayKit:AsyncDisplayKit",

@@ -641,7 +641,7 @@ plist_fragment(
     template =
     """
     <key>CFBundleDisplayName</key>
-    <string>Telegram</string>
+    <string>Magnium</string>
     """
 )
 
@@ -1696,7 +1696,7 @@ plist_fragment(
     <key>CFBundleDevelopmentRegion</key>
     <string>en</string>
     <key>CFBundleDisplayName</key>
-    <string>Telegram</string>
+    <string>Magnium</string>
     <key>CFBundleIdentifier</key>
     <string>{telegram_bundle_id}</string>
     <key>CFBundleName</key>
@@ -1929,6 +1929,9 @@ ios_application(
     resources = [
         ":LaunchScreen",
         #":DefaultAppIcon",
+        # Magnium: the Python stdlib and the plugin API, under python/ in the bundle.
+        "//third-party/python-ios:PythonStdlib",
+        "//submodules/Magnium/MagniumPlugins:MagniumPluginsPythonResources",
     ],
     frameworks = [
         ":MtProtoKitFramework",
@@ -1961,6 +1964,8 @@ ios_application(
     deps = [
         ":Main",
         ":Lib",
+        # Magnium: embeds the Python stdlib extension modules as frameworks.
+        "//third-party/python-ios:PythonExtensions",
     ],
     visibility = ["//visibility:public"],
 )

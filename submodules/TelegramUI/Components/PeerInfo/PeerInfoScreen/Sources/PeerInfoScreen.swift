@@ -197,6 +197,8 @@ enum PeerInfoSettingsSection {
     case stars
     case ton
     case wallet
+    case magniumPlugins
+    case magniumSettings
 }
 
 enum PeerInfoReportType {

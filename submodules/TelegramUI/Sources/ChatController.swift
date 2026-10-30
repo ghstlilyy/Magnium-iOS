@@ -7869,6 +7869,7 @@ public final class ChatControllerImpl: TelegramBaseController, ChatController, G
 
     override public func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        MagniumHostBridge.shared.chatDidAppear(self)
         
         self.didAppear = true
         
@@ -8315,6 +8316,7 @@ public final class ChatControllerImpl: TelegramBaseController, ChatController, G
     
     override public func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        MagniumHostBridge.shared.chatWillDisappear(self)
 
         self.walletTransferAnimationsVisible = false
         
@@ -9192,6 +9194,11 @@ public final class ChatControllerImpl: TelegramBaseController, ChatController, G
         }
         
         guard let peerId = self.chatLocation.peerId else {
+            return
+        }
+
+        let messages = magniumApplySendMessageHook(messages, peerId: peerId)
+        if messages.isEmpty {
             return
         }
 

@@ -1,4 +1,5 @@
 import Foundation
+import MagniumSettings
 import UIKit
 import Display
 import AccountContext
@@ -265,6 +266,12 @@ func settingsItems(data: PeerInfoScreenData?, context: AccountContext, presentat
     items[.advanced]!.append(PeerInfoScreenDisclosureItem(id: 3, text: presentationData.strings.Settings_Appearance, icon: PresentationResourcesSettings.appearance, action: {
         interaction.openSettings(.appearance)
     }))
+    items[.advanced]!.append(PeerInfoScreenDisclosureItem(id: 8, text: "Magnium", icon: PresentationResourcesSettings.settings, action: {
+        interaction.openSettings(.magniumSettings)
+    }))
+    items[.advanced]!.append(PeerInfoScreenDisclosureItem(id: 7, text: "Плагины", icon: PresentationResourcesSettings.aiTools, action: {
+        interaction.openSettings(.magniumPlugins)
+    }))
     
     items[.advanced]!.append(PeerInfoScreenDisclosureItem(id: 6, label: .text(data.isPowerSavingEnabled == true ? presentationData.strings.Settings_PowerSavingOn : presentationData.strings.Settings_PowerSavingOff), text: presentationData.strings.Settings_PowerSaving, icon: PresentationResourcesSettings.powerSaving, action: {
         interaction.openSettings(.powerSaving)
@@ -277,13 +284,13 @@ func settingsItems(data: PeerInfoScreenData?, context: AccountContext, presentat
     
     let premiumConfiguration = PremiumConfiguration.with(appConfiguration: context.currentAppConfiguration.with { $0 })
     let isPremiumDisabled = premiumConfiguration.isPremiumDisabled
-    if !isPremiumDisabled || context.isPremium {
+    if (!isPremiumDisabled || context.isPremium) && !MagniumSettings.isOn(.hidePremiumRow) {
         items[.payment]!.append(PeerInfoScreenDisclosureItem(id: 100, label: .text(""), text: presentationData.strings.Settings_Premium, icon: PresentationResourcesSettings.premium, action: {
             interaction.openSettings(.premium)
         }))
     }
     if let starsState = data.starsState {
-        if !isPremiumDisabled || abs(starsState.balance.value) > 0 {
+        if (!isPremiumDisabled || abs(starsState.balance.value) > 0) && !MagniumSettings.isOn(.hideStarsRow) {
             let balanceText: NSAttributedString
             if abs(starsState.balance.value) > 0 {
                 let formattedLabel = formatStarsAmountText(starsState.balance, dateTimeFormat: presentationData.dateTimeFormat)
@@ -316,13 +323,13 @@ func settingsItems(data: PeerInfoScreenData?, context: AccountContext, presentat
             }))
         }
     }
-    if !isPremiumDisabled || context.isPremium {
+    if (!isPremiumDisabled || context.isPremium) && !MagniumSettings.isOn(.hideBusinessRow) {
         items[.payment]!.append(PeerInfoScreenDisclosureItem(id: 104, label: .text(""), additionalBadgeLabel: nil, text: presentationData.strings.Settings_Business, icon: PresentationResourcesSettings.business, action: {
             interaction.openSettings(.businessSetup)
         }))
     }
     if let starsState = data.starsState {
-        if !isPremiumDisabled || starsState.balance > StarsAmount.zero {
+        if (!isPremiumDisabled || starsState.balance > StarsAmount.zero) && !MagniumSettings.isOn(.hideGiftRow) {
             items[.payment]!.append(PeerInfoScreenDisclosureItem(id: 105, label: .text(""), text: presentationData.strings.Settings_SendGift, icon: PresentationResourcesSettings.premiumGift, action: {
                 interaction.openSettings(.premiumGift)
             }))
@@ -342,15 +349,17 @@ func settingsItems(data: PeerInfoScreenData?, context: AccountContext, presentat
         }
     }
     
-    items[.support]!.append(PeerInfoScreenDisclosureItem(id: 0, text: presentationData.strings.Settings_Support, icon: PresentationResourcesSettings.support, action: {
-        interaction.openSettings(.support)
-    }))
-    items[.support]!.append(PeerInfoScreenDisclosureItem(id: 1, text: presentationData.strings.Settings_FAQ, icon: PresentationResourcesSettings.faq, action: {
-        interaction.openSettings(.faq)
-    }))
-    items[.support]!.append(PeerInfoScreenDisclosureItem(id: 2, text: presentationData.strings.Settings_Tips, icon: PresentationResourcesSettings.tips, action: {
-        interaction.openSettings(.tips)
-    }))
+    if !MagniumSettings.isOn(.hideHelpSection) {
+        items[.support]!.append(PeerInfoScreenDisclosureItem(id: 0, text: presentationData.strings.Settings_Support, icon: PresentationResourcesSettings.support, action: {
+            interaction.openSettings(.support)
+        }))
+        items[.support]!.append(PeerInfoScreenDisclosureItem(id: 1, text: presentationData.strings.Settings_FAQ, icon: PresentationResourcesSettings.faq, action: {
+            interaction.openSettings(.faq)
+        }))
+        items[.support]!.append(PeerInfoScreenDisclosureItem(id: 2, text: presentationData.strings.Settings_Tips, icon: PresentationResourcesSettings.tips, action: {
+            interaction.openSettings(.tips)
+        }))
+    }
     
     var result: [(AnyHashable, [PeerInfoScreenItem])] = []
     for section in SettingsSection.allCases {

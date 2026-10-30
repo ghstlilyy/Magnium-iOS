@@ -1,5 +1,6 @@
 import Foundation
 import TelegramCore
+import MagniumSettings
 import TelegramPresentationData
 import TelegramUIPreferences
 import TelegramStringFormatting
@@ -95,6 +96,11 @@ public func stringForMessageTimestampStatus(
         }
     }
     
+    // Magnium: "Дата у каждого сообщения".
+    if MagniumSettings.isOn(.fullDateInMessages), message.scheduleTime == nil {
+        format = .full
+    }
+    
     var displayFullDate = false
     if case .full = format, timestamp > 100000 {
         displayFullDate = true
@@ -108,6 +114,9 @@ public func stringForMessageTimestampStatus(
     }
     
     var dateText = stringForMessageTimestamp(timestamp: timestamp, dateTimeFormat: dateTimeFormat)
+    if MagniumSettings.isOn(.timeWithSeconds) {
+        dateText = MagniumTimeStyle.addingSeconds(to: dateText, timestamp: timestamp)
+    }
     if timestamp == scheduleWhenOnlineTimestamp {
         dateText = "         "
     }
@@ -176,12 +185,25 @@ public func stringForMessageTimestampStatus(
                 dateText = strings.Message_EditFullDateFormat(dayText, stringForMessageTimestamp(timestamp: timestamp, dateTimeFormat: dateTimeFormat)).string
             }
         } else {
-            dateText = strings.Message_FullDateFormat(dayText, stringForMessageTimestamp(timestamp: timestamp, dateTimeFormat: dateTimeFormat)).string
+            var timeText = stringForMessageTimestamp(timestamp: timestamp, dateTimeFormat: dateTimeFormat)
+            if MagniumSettings.isOn(.timeWithSeconds) {
+                timeText = MagniumTimeStyle.addingSeconds(to: timeText, timestamp: timestamp)
+            }
+            dateText = strings.Message_FullDateFormat(dayText, timeText).string
         }
     } else if let forwardInfo = message.forwardInfo, forwardInfo.flags.contains(.isImported) {
         dateText = strings.Message_ImportedDateFormat(dateStringForDay(strings: strings, dateTimeFormat: dateTimeFormat, timestamp: forwardInfo.date), stringForMessageTimestamp(timestamp: forwardInfo.date, dateTimeFormat: dateTimeFormat), dateText).string
     }
-    
+
+    // Magnium: fun time styles, the message number, and the mark of a message a plugin kept after deletion.
+    dateText = MagniumTimeStyle.apply(to: dateText)
+    if MagniumSettings.isOn(.showMessageId), message.id.namespace == Namespaces.Message.Cloud {
+        dateText = "#\(message.id.id) \(dateText)"
+    }
+    if message.attributes.contains(where: { $0 is MagniumDeletedMessageAttribute }) {
+        dateText = MagniumSettings.isOn(.deletedMarkerIcon) ? "🗑 \(dateText)" : "удалено \(dateText)"
+    }
+
     var authorTitle: String?
     if let author = message.author, case .user = author {
         if let peer = message.peers[message.id.peerId] as? TelegramChannel, case .broadcast = peer.info {

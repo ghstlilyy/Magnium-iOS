@@ -236,6 +236,10 @@ func openChatMessageImpl(_ params: OpenChatMessageParams) -> Bool {
                 if immediateShare {
                     let controller = params.context.sharedContext.makeShareScreen(context: params.context, params: ShareControllerParams(subject: .media(.standalone(media: file), nil), immediateExternalShare: true))
                     params.present(controller, nil, .window(.root))
+                } else if magniumIsPluginFile(file) {
+                    magniumPresentPluginInstall(context: params.context, file: file, present: { controller in
+                        params.present(controller, nil, .window(.root))
+                    })
                 } else if let rootController = params.navigationController?.view.window?.rootViewController {
                     let proceed = {
                         let canShare = !params.message.isCopyProtected() && !params.copyProtected

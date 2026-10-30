@@ -1,4 +1,5 @@
 import Foundation
+import MagniumServer
 import UIKit
 import Display
 import AccountContext
@@ -100,6 +101,7 @@ func infoItems(
         let ItemCallList = 1000
         let ItemPersonalChannelHeader = 2000
         let ItemPersonalChannel = 2001
+        let ItemMagniumBadges = 2999
         let ItemPhoneNumber = 3000
         let ItemUsername = 3001
         let ItemBirthdate = 3002
@@ -171,6 +173,12 @@ func infoItems(
                     controller.push(communityController)
                 }
             ))
+        }
+        
+        // Magnium: badges from the Magnium server, issued on this device or by other providers.
+        let magniumBadges = MagniumBadges.shared.badges(userId: user.id.id._internalGetInt64Value())
+        if !magniumBadges.isEmpty {
+            items[currentPeerInfoSection]!.append(PeerInfoScreenLabeledValueItem(id: ItemMagniumBadges, label: "значки Magnium", text: magniumBadges.map { "\($0.emoji) \($0.title)" }.joined(separator: "\n"), textColor: .primary, textBehavior: .multiLine(maxLines: 20, enabledEntities: []), action: nil, requestLayout: { _ in }))
         }
         
         if let phone = user.phone {

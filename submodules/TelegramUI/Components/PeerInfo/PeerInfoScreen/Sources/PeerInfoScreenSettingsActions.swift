@@ -17,6 +17,7 @@ import PasswordSetupUI
 import InstantPageCache
 import WalletContext
 import UndoUI
+import MagniumPluginsUI
 
 extension PeerInfoScreenNode {
     func openSettings(section: PeerInfoSettingsSection) {
@@ -148,6 +149,10 @@ extension PeerInfoScreenNode {
             push(controller)
         case .dataAndStorage:
             push(dataAndStorageController(context: self.context))
+        case .magniumPlugins:
+            push(magniumPluginsController(context: self.context))
+        case .magniumSettings:
+            push(magniumSettingsController(context: self.context))
         case .appearance:
             push(themeSettingsController(context: self.context))
         case .language:

@@ -4622,6 +4622,22 @@ func replayFinalState(
             case let .DeleteEphemeralMessages(peerId, ids):
                 deleteEphemeralMessages(transaction: transaction, peerId: peerId, ids: ids)
             case let .DeleteMessagesWithGlobalIds(ids):
+                // Magnium: a plugin may keep deleted messages, marked as such.
+                let magniumKept = magniumPreserveDeletedMessages(transaction: transaction, ids: transaction.messageIdsForGlobalIds(ids))
+                if !magniumKept.isEmpty {
+                    // In the global cloud namespace a message's id is its global id.
+                    let keptGlobalIds = Set(magniumKept.map { $0.id })
+                    let remainingIds = ids.filter { !keptGlobalIds.contains($0) }
+                    var resourceIds: [MediaResourceId] = []
+                    transaction.deleteMessagesWithGlobalIds(remainingIds, forEachMedia: { media in
+                        addMessageMediaResourceIdsToRemove(media: media, resourceIds: &resourceIds)
+                    })
+                    if !resourceIds.isEmpty {
+                        let _ = mediaBox.removeCachedResources(Array(Set(resourceIds)), force: true).start()
+                    }
+                    deletedMessageIds.append(contentsOf: remainingIds.map { .global($0) })
+                    continue
+                }
                 var resourceIds: [MediaResourceId] = []
                 transaction.deleteMessagesWithGlobalIds(ids, forEachMedia: { media in
                     addMessageMediaResourceIdsToRemove(media: media, resourceIds: &resourceIds)
@@ -4631,6 +4647,9 @@ func replayFinalState(
                 }
                 deletedMessageIds.append(contentsOf: ids.map { .global($0) })
             case let .DeleteMessages(ids):
+                // Magnium: a plugin may keep deleted messages, marked as such.
+                let magniumKept = magniumPreserveDeletedMessages(transaction: transaction, ids: ids)
+                let ids = magniumKept.isEmpty ? ids : ids.filter { !magniumKept.contains($0) }
                 _internal_deleteMessages(transaction: transaction, mediaBox: mediaBox, ids: ids, manualAddMessageThreadStatsDifference: { id, add, remove in
                     addMessageThreadStatsDifference(threadKey: id, remove: remove, addedMessagePeer: nil, addedMessageId: nil, isOutgoing: false)
                 })

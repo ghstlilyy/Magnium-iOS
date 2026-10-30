@@ -1372,6 +1372,10 @@ public final class Network: NSObject {
     }
     
     func requestWithAdditionalInfo<T>(_ data: (FunctionDescription, Buffer, DeserializeFunctionResponse<T>), info: NetworkRequestAdditionalInfo, tag: NetworkRequestDependencyTag? = nil, automaticFloodWait: Bool = true, onFloodWaitError: ((String) -> Void)? = nil) -> Signal<NetworkRequestResult<T>, MTRpcError> {
+        // Magnium: a plugin may block a method (ghost mode); see MagniumCoreHooks.setBlockedMethods.
+        if MagniumCoreHooks.isRequestBlocked(data.0.name) {
+            return .never()
+        }
         let requestService = self.requestService
         return Signal { [requestService] subscriber in
             let request = NetworkEngineRequest(
@@ -1418,6 +1422,10 @@ public final class Network: NSObject {
     }
     
     func request<T>(_ data: (FunctionDescription, Buffer, DeserializeFunctionResponse<T>), tag: NetworkRequestDependencyTag? = nil, automaticFloodWait: Bool = true, onFloodWaitError: ((String) -> Void)? = nil) -> Signal<T, MTRpcError> {
+        // Magnium: a plugin may block a method (ghost mode); see MagniumCoreHooks.setBlockedMethods.
+        if MagniumCoreHooks.isRequestBlocked(data.0.name) {
+            return .never()
+        }
         let requestService = self.requestService
         return Signal { [requestService] subscriber in
             let request = NetworkEngineRequest(

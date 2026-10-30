@@ -1,4 +1,5 @@
 import PasscodeCore
+import MagniumSettings
 import PasscodeUI
 import LocalAuthentication
 import Foundation
@@ -1012,6 +1013,20 @@ public final class AccountContextImpl: AccountContext {
     }
     
     public func requestCall(peerId: EnginePeer.Id, isVideo: Bool, completion: @escaping () -> Void) {
+        // Magnium: "Подтверждать звонки".
+        if MagniumSettings.isOn(.confirmCalls) {
+            MagniumHostBridge.shared.present(textAlertController(context: self, title: isVideo ? "Начать видеозвонок?" : "Позвонить?", text: "", actions: [
+                TextAlertAction(type: .genericAction, title: "Отмена", action: {}),
+                TextAlertAction(type: .defaultAction, title: "Позвонить", action: { [weak self] in
+                    self?.magniumPerformRequestCall(peerId: peerId, isVideo: isVideo, completion: completion)
+                })
+            ]))
+            return
+        }
+        self.magniumPerformRequestCall(peerId: peerId, isVideo: isVideo, completion: completion)
+    }
+    
+    private func magniumPerformRequestCall(peerId: EnginePeer.Id, isVideo: Bool, completion: @escaping () -> Void) {
         guard let callResult = self.sharedContext.callManager?.requestCall(context: self, peerId: peerId, isVideo: isVideo, endCurrentIfAny: false) else {
             return
         }

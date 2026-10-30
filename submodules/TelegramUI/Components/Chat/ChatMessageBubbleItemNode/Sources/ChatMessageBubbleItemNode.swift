@@ -1,4 +1,5 @@
 import Foundation
+import MagniumSettings
 import LottieSettings
 import UIKit
 import AsyncDisplayKit
@@ -1478,6 +1479,10 @@ public class ChatMessageBubbleItemNode: ChatMessageItemView, ChatMessagePreviewI
             self.view.disablesInteractiveTransitionGestureRecognizer = false//!item.context.sharedContext.immediateExperimentalUISettings.unidirectionalSwipeToReply
         }
         replyRecognizer.shouldBegin = { [weak self] in
+            // Magnium: "Без свайпа для ответа".
+            if MagniumSettings.isOn(.disableSwipeToReply) {
+                return false
+            }
             if let strongSelf = self, let item = strongSelf.item {
                 if strongSelf.selectionNode != nil {
                     return false

@@ -1,4 +1,5 @@
 import Foundation
+import MagniumSettings
 import UIKit
 import AsyncDisplayKit
 import Display
@@ -212,6 +213,10 @@ public class ChatMessageInstantVideoItemNode: ChatMessageItemView, ASGestureReco
         
         let replyRecognizer = ChatSwipeToReplyRecognizer(target: self, action: #selector(self.swipeToReplyGesture(_:)))
         replyRecognizer.shouldBegin = { [weak self] in
+            // Magnium: "Без свайпа для ответа".
+            if MagniumSettings.isOn(.disableSwipeToReply) {
+                return false
+            }
             if let strongSelf = self, let item = strongSelf.item {
                 if strongSelf.selectionNode != nil {
                     return false
