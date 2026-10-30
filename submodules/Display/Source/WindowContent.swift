@@ -281,9 +281,13 @@ public final class WindowHostView {
     /// Multi-display devices only: the fold while the system reports it active, in `eventView`
     /// coordinates. Nil before iOS 27.1.
     fileprivate var activeDivision: CGRect? {
+        // Magnium: the iOS 27.0 SDK (Xcode 27.0 beta, UIKit 9127.0.x) has no reservedRegions.
+        // Drop this guard once builds use Xcode 27.1.
+        #if canImport(UIKit, _version: 9127.1)
         if #available(iOS 27.1, *) {
             return self.eventView.reservedRegions(kind: .division).first(where: \.isActive)?.frame
         }
+        #endif
         return nil
     }
     
