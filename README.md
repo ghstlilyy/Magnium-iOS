@@ -1,116 +1,93 @@
-# Telegram iOS Source Code Compilation Guide
+# Magnium
 
-We welcome all developers to use our API and source code to create applications on our platform.
-There are several things we require from **all developers** for the moment.
+Magnium is an unofficial iOS client built on the [Telegram for iOS](https://github.com/TelegramMessenger/Telegram-iOS)
+source (currently app version `13.1.1`). It keeps the full Telegram experience and adds a
+Python plugin system that lets you extend the app from inside it, plus a set of built-in
+tweaks. It is distributed as a sideloaded `.ipa` (e.g. via [KSign](https://github.com/khcrysalis/Feather)),
+not through the App Store.
 
-# Creating your Telegram Application
+Official channel: **[t.me/magniumtg](https://t.me/magniumtg)**
 
-1. [**Obtain your own api_id**](https://core.telegram.org/api/obtaining_api_id) for your application.
-2. Please **do not** use the name Telegram for your app — or make sure your users understand that it is unofficial.
-3. Kindly **do not** use our standard logo (white paper plane in a blue circle) as your app's logo.
-3. Please study our [**security guidelines**](https://core.telegram.org/mtproto/security_guidelines) and take good care of your users' data and privacy.
-4. Please remember to publish **your** code too in order to comply with the licences.
+> Magnium is not affiliated with or endorsed by Telegram. It is a community fork released
+> under the same licence as the upstream project.
 
-# Quick Compilation Guide
+## Features
 
-## Get the Code
+- **Plugins** — Python 3.14 code that runs inside the app with the same rights as the client.
+  Install a `.mpp` package by tapping it in any chat, or from Settings ▸ Plugins ▸ *Install from
+  file*. Plugins can hook outgoing/incoming actions, add message-menu items, keep deleted and
+  self-destructing messages, block TL methods, and ship their own settings pages. See
+  [`submodules/Magnium`](submodules/Magnium/README.md) for the full plugin API and
+  [`submodules/Magnium/SERVER.md`](submodules/Magnium/SERVER.md) for the plugin server.
+- **Magnium settings block** — Magnium's own options live in a dedicated group in Settings,
+  separate from Telegram's, alongside the Plugins entry.
+- **Hide the Contacts tab** — removes the tab at once; contacts stay reachable from the
+  new-message button.
 
-```
-git clone --recursive -j8 https://github.com/TelegramMessenger/Telegram-iOS.git
-```
+## Repository layout
 
-## Setup Xcode
+This is a standard Telegram-iOS checkout. Magnium's own code lives under
+[`submodules/Magnium`](submodules/Magnium):
 
-Install Xcode (directly from https://developer.apple.com/download/applications or using the App Store).
+| Module | Purpose |
+|---|---|
+| `MagniumPlugins` | Plugin runtime and hook core |
+| `MagniumPluginsUI` | In-app plugin management UI |
+| `MagniumPython` | Embedded Python 3.14 |
+| `MagniumServer` | Plugin server |
+| `MagniumSettings` | Magnium settings storage |
+| `Examples/ping` | A complete example plugin |
 
-## Adjust Configuration
+Everything else is upstream Telegram-iOS, tracked against the `origin`
+(`TelegramMessenger/Telegram-iOS`) remote; Magnium changes live on the `magnium` branch of
+`ghstlilyy/Magnium-iOS`.
 
-1. Generate a random identifier:
-```
-openssl rand -hex 8
-```
-2. Create a new Xcode project. Use `Telegram` as the Product Name. Use `org.{identifier from step 1}` as the Organization Identifier.
-3. Open `Keychain Access` and navigate to `Certificates`. Locate `Apple Development: your@email.address (XXXXXXXXXX)` and double tap the certificate. Under `Details`, locate `Organizational Unit`. This is the Team ID.
-4. Edit `build-system/template_minimal_development_configuration.json`. Use data from the previous steps.
+## Building
 
-## Generate an Xcode project
+Magnium builds with the upstream Bazel/`Make.py` toolchain. See `versions.json` for the exact
+Xcode and Bazel versions.
 
-```
-python3 build-system/Make/Make.py \
-    --cacheDir="$HOME/telegram-bazel-cache" \
-    generateProject \
-    --configurationPath=build-system/template_minimal_development_configuration.json \
-    --xcodeManagedCodesigning
-```
+### Requirements
 
-# Advanced Compilation Guide
+- macOS with the Xcode version pinned in `versions.json`
+- A clone **with submodules**:
+  ```
+  git clone --recursive -j8 https://github.com/ghstlilyy/Magnium-iOS.git
+  ```
 
-## Xcode
+### Configuration (local only)
 
-1. Copy and edit `build-system/appstore-configuration.json`.
-2. Copy `build-system/fake-codesigning`. Create and download provisioning profiles, using the `profiles` folder as a reference for the entitlements.
-3. Generate an Xcode project:
-```
-python3 build-system/Make/Make.py \
-    --cacheDir="$HOME/telegram-bazel-cache" \
-    generateProject \
-    --configurationPath=configuration_from_step_1.json \
-    --codesigningInformationPath=directory_from_step_2
-```
+You need your own [`api_id`/`api_hash`](https://core.telegram.org/api/obtaining_api_id) and a
+code-signing setup. These live in a local configuration JSON and a code-signing directory that
+are **not committed** to the repository — keep your credentials out of git.
 
-## IPA
+### IPA
 
-1. Repeat the steps from the previous section. Use distribution provisioning profiles.
-2. Run:
 ```
 python3 build-system/Make/Make.py \
     --cacheDir="$HOME/telegram-bazel-cache" \
     build \
-    --configurationPath=...see previous section... \
-    --codesigningInformationPath=...see previous section... \
-    --buildNumber=100001 \
+    --configurationPath=path/to/magnium-configuration.json \
+    --codesigningInformationPath=path/to/magnium/codesigning \
+    --buildNumber=1 \
     --configuration=release_arm64
 ```
 
-# FAQ
+The resulting `.ipa` can be sideloaded onto a device.
 
-## Xcode is stuck at "build-request.json not updated yet"
+## Writing a plugin
 
-Occasionally, you might observe the following message in your build log:
-```
-"/Users/xxx/Library/Developer/Xcode/DerivedData/Telegram-xxx/Build/Intermediates.noindex/XCBuildData/xxx.xcbuilddata/build-request.json" not updated yet, waiting...
-```
-
-Should this occur, simply cancel the ongoing build and initiate a new one.
-
-## Telegram_xcodeproj: no such package 
-
-Following a system restart, the auto-generated Xcode project might encounter a build failure accompanied by this error:
-```
-ERROR: Skipping '@rules_xcodeproj_generated//generator/Telegram/Telegram_xcodeproj:Telegram_xcodeproj': no such package '@rules_xcodeproj_generated//generator/Telegram/Telegram_xcodeproj': BUILD file not found in directory 'generator/Telegram/Telegram_xcodeproj' of external repository @rules_xcodeproj_generated. Add a BUILD file to a directory to mark it as a package.
-```
-
-If you encounter this issue, re-run the project generation steps in the README.
-
-
-# Tips
-
-## Codesigning is not required for simulator-only builds
-
-Add `--disableProvisioningProfiles`:
-```
-python3 build-system/Make/Make.py \
-    --cacheDir="$HOME/telegram-bazel-cache" \
-    generateProject \
-    --configurationPath=path-to-configuration.json \
-    --codesigningInformationPath=path-to-provisioning-data \
-    --disableProvisioningProfiles
-```
-
-## Versions
-
-Each release is built using a specific Xcode version (see `versions.json`). The helper script checks the versions of the installed software and reports an error if they don't match the ones specified in `versions.json`. It is possible to bypass these checks:
+Pack a directory into a `.mpp` package:
 
 ```
-python3 build-system/Make/Make.py --overrideXcodeVersion build ... # Don't check the version of Xcode
+python3 submodules/Magnium/pack-plugin.py <directory>
 ```
+
+`submodules/Magnium/Examples/ping` is a complete, documented example. Full API reference:
+[`submodules/Magnium/README.md`](submodules/Magnium/README.md).
+
+## Licence
+
+Magnium is a fork of Telegram-iOS and is released under the same licence (GPL-2.0-or-later).
+As required, the modified source is published here. Please do not use Telegram's name or logo
+in a way that implies this is an official Telegram app.
