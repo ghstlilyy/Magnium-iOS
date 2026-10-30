@@ -23,6 +23,8 @@ enum SettingsSection: Int, CaseIterable {
     case wallet
     case proxy
     case apps
+    // Magnium's own block, apart from Telegram's settings.
+    case magnium
     case shortcuts
     case advanced
     case payment
@@ -266,10 +268,10 @@ func settingsItems(data: PeerInfoScreenData?, context: AccountContext, presentat
     items[.advanced]!.append(PeerInfoScreenDisclosureItem(id: 3, text: presentationData.strings.Settings_Appearance, icon: PresentationResourcesSettings.appearance, action: {
         interaction.openSettings(.appearance)
     }))
-    items[.advanced]!.append(PeerInfoScreenDisclosureItem(id: 8, text: "Magnium", icon: PresentationResourcesSettings.settings, action: {
+    items[.magnium]!.append(PeerInfoScreenDisclosureItem(id: 0, text: "Настройки Magnium", icon: PresentationResourcesSettings.settings, action: {
         interaction.openSettings(.magniumSettings)
     }))
-    items[.advanced]!.append(PeerInfoScreenDisclosureItem(id: 7, text: "Плагины", icon: PresentationResourcesSettings.aiTools, action: {
+    items[.magnium]!.append(PeerInfoScreenDisclosureItem(id: 1, text: "Плагины", icon: PresentationResourcesSettings.aiTools, action: {
         interaction.openSettings(.magniumPlugins)
     }))
     

@@ -15,6 +15,7 @@ public enum MagniumFeature: String, CaseIterable {
     case hideHelpSection
     case hideGiftRow
     case hideChatListStatuses
+    case hideContactsTab
     // Features
     case keepScreenAwakeInChats
     case disableSwipeToReply
@@ -47,7 +48,7 @@ public enum MagniumFeature: String, CaseIterable {
 
     public var category: Category {
         switch self {
-        case .hideEditedLabel, .timeWithSeconds, .fullDateInMessages, .showMessageId, .magniumTitle, .deletedMarkerIcon, .hidePremiumRow, .hideStarsRow, .hideBusinessRow, .hideHelpSection, .hideGiftRow, .hideChatListStatuses:
+        case .hideEditedLabel, .timeWithSeconds, .fullDateInMessages, .showMessageId, .magniumTitle, .deletedMarkerIcon, .hidePremiumRow, .hideStarsRow, .hideBusinessRow, .hideHelpSection, .hideGiftRow, .hideChatListStatuses, .hideContactsTab:
             return .appearance
         case .keepScreenAwakeInChats, .disableSwipeToReply, .silentByDefault, .stripTrackingParameters, .confirmCalls:
             return .features
@@ -82,6 +83,8 @@ public enum MagniumFeature: String, CaseIterable {
             return "Скрыть «Отправить подарок»"
         case .hideChatListStatuses:
             return "Без статусов в списке чатов"
+        case .hideContactsTab:
+            return "Скрыть вкладку «Контакты»"
         case .keepScreenAwakeInChats:
             return "Не гасить экран в чатах"
         case .disableSwipeToReply:
@@ -133,6 +136,8 @@ public enum MagniumFeature: String, CaseIterable {
             return "🕧 12:30"
         case .hideChatListStatuses:
             return "Эмодзи-статусы и звёзды Premium у имён"
+        case .hideContactsTab:
+            return "Контакты останутся в кнопке нового сообщения"
         case .hexTime:
             return "C:1E вместо 12:30"
         case .magniumTitle:

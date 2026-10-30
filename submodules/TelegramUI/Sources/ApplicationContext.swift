@@ -1,4 +1,5 @@
 import Foundation
+import MagniumSettings
 import UIKit
 import Intents
 import TelegramPresentationData
@@ -155,6 +156,7 @@ final class AuthorizedApplicationContext {
     private var showCallsTabDisposable: Disposable?
     private var showNewsTab: Bool
     private var showNewsTabDisposable: Disposable?
+    private var magniumSettingsObserver: NSObjectProtocol?
     private var enablePostboxTransactionsDiposable: Disposable?
     
     init(sharedApplicationContext: SharedApplicationContext, mainWindow: Window1, context: AccountContextImpl, accountManager: AccountManager<TelegramAccountManagerTypes>, showCallsTab: Bool, reinitializedNotificationSettings: @escaping () -> Void) {
@@ -835,6 +837,14 @@ final class AuthorizedApplicationContext {
             self.rootController.updateRootControllers(showCallsTab: self.showCallsTab, showNewsTab: value)
         })
         
+        // Magnium: features that change the tabs ("Скрыть вкладку «Контакты»") apply at once.
+        self.magniumSettingsObserver = NotificationCenter.default.addObserver(forName: .magniumSettingsChanged, object: nil, queue: .main, using: { [weak self] notification in
+            guard let self, notification.userInfo?["feature"] as? String == MagniumFeature.hideContactsTab.rawValue else {
+                return
+            }
+            self.rootController.updateRootControllers(showCallsTab: self.showCallsTab, showNewsTab: self.showNewsTab)
+        })
+        
         self.rootController.setForceInCallStatusBar((self.context.sharedContext as! SharedAccountContextImpl).currentCallStatusBarNode)
         if let groupCallController = self.context.sharedContext.currentGroupCallController as? VoiceChatController {
             if let overlayController = groupCallController.currentOverlayController {
@@ -846,6 +856,9 @@ final class AuthorizedApplicationContext {
     
     deinit {
         self.context.account.postbox.clearCaches()
+        if let magniumSettingsObserver = self.magniumSettingsObserver {
+            NotificationCenter.default.removeObserver(magniumSettingsObserver)
+        }
         self.showNewsTabDisposable?.dispose()
         self.context.account.shouldKeepOnlinePresence.set(.single(false))
         self.context.account.shouldBeServiceTaskMaster.set(.single(.never))

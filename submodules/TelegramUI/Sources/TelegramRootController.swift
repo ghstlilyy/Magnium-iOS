@@ -1,4 +1,5 @@
 import Foundation
+import MagniumSettings
 import UIKit
 import Display
 import AsyncDisplayKit
@@ -213,7 +214,10 @@ public final class TelegramRootController: NavigationController, TelegramRootCon
         contactsController.switchToChatsController = {  [weak self] in
             self?.openChatsController(activateSearch: false)
         }
-        controllers.append(contactsController)
+        // Magnium: "Скрыть вкладку «Контакты»". The controller still exists for openContacts().
+        if !MagniumSettings.isOn(.hideContactsTab) {
+            controllers.append(contactsController)
+        }
         
         if showCallsTab {
             controllers.append(callListController)
@@ -259,7 +263,9 @@ public final class TelegramRootController: NavigationController, TelegramRootCon
             return
         }
         var controllers: [ViewController] = []
-        controllers.append(self.contactsController!)
+        if !MagniumSettings.isOn(.hideContactsTab) {
+            controllers.append(self.contactsController!)
+        }
         if showCallsTab {
             controllers.append(self.callListController!)
         }
