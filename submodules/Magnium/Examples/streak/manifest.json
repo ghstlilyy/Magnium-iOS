@@ -1,0 +1,9 @@
+{
+    "id": "magnium.streak",
+    "name": "Огонёк",
+    "version": "1.0",
+    "description": "Питомец серии как в TikTok: сидит в углу чата и показывает, сколько дней подряд вы переписываетесь. Копите монеты, растите его из яйца в легенду и одевайте.",
+    "author": {"name": "Magnium", "url": "https://t.me/magniumtg"},
+    "icon": "icon.png",
+    "entry": "main"
+}

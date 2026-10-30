@@ -1,0 +1,110 @@
+{
+ "stages": {
+  "baby": {
+   "top": 13,
+   "eyes": 18,
+   "neck": 21
+  },
+  "teen": {
+   "top": 9,
+   "eyes": 15,
+   "neck": 19
+  },
+  "adult": {
+   "top": 6,
+   "eyes": 13,
+   "neck": 18
+  },
+  "legend": {
+   "top": 6,
+   "eyes": 13,
+   "neck": 18
+  }
+ },
+ "accessories": {
+  "hat_cap": {
+   "x": 5,
+   "anchor": "top",
+   "offset": -4,
+   "width": 14,
+   "height": 6
+  },
+  "hat_crown": {
+   "x": 6,
+   "anchor": "top",
+   "offset": -4,
+   "width": 12,
+   "height": 6
+  },
+  "hat_party": {
+   "x": 7,
+   "anchor": "top",
+   "offset": -7,
+   "width": 10,
+   "height": 9
+  },
+  "hat_wizard": {
+   "x": 6,
+   "anchor": "top",
+   "offset": -8,
+   "width": 12,
+   "height": 10
+  },
+  "hat_bow": {
+   "x": 7,
+   "anchor": "top",
+   "offset": -2,
+   "width": 10,
+   "height": 5
+  },
+  "hat_beanie": {
+   "x": 5,
+   "anchor": "top",
+   "offset": -4,
+   "width": 14,
+   "height": 6
+  },
+  "glasses_sun": {
+   "x": 6,
+   "anchor": "eyes",
+   "offset": -1,
+   "width": 12,
+   "height": 3
+  },
+  "glasses_round": {
+   "x": 6,
+   "anchor": "eyes",
+   "offset": -2,
+   "width": 12,
+   "height": 4
+  },
+  "glasses_hearts": {
+   "x": 5,
+   "anchor": "eyes",
+   "offset": -1,
+   "width": 12,
+   "height": 3
+  },
+  "scarf_red": {
+   "x": 5,
+   "anchor": "neck",
+   "offset": 0,
+   "width": 14,
+   "height": 5
+  },
+  "scarf_blue": {
+   "x": 5,
+   "anchor": "neck",
+   "offset": 0,
+   "width": 14,
+   "height": 5
+  },
+  "scarf_rainbow": {
+   "x": 5,
+   "anchor": "neck",
+   "offset": 0,
+   "width": 14,
+   "height": 5
+  }
+ }
+}

@@ -1,0 +1,9 @@
+{
+    "id": "magnium.noads",
+    "name": "Без рекламы",
+    "version": "1.0",
+    "description": "Убирает спонсорские сообщения в каналах.",
+    "author": {"name": "Magnium", "url": "https://t.me/magniumtg"},
+    "icon": "icon.png",
+    "entry": "main"
+}

@@ -1,0 +1,9 @@
+{
+    "id": "magnium.antidelete",
+    "name": "Антиудаление",
+    "version": "1.0",
+    "description": "Сообщения, которые собеседник удалил, остаются в чате с пометкой «удалено». Можно посмотреть все удалённые в чате.",
+    "author": {"name": "Magnium", "url": "https://t.me/magniumtg"},
+    "icon": "icon.png",
+    "entry": "main"
+}

@@ -1,0 +1,12 @@
+{
+    "id": "magnium.clawd",
+    "name": "Клодик",
+    "version": "1.0",
+    "description": "Маленький анимированный Клодик сидит на поле ввода, панелях, меню и окнах. Места включаются в настройках плагина.",
+    "author": {
+        "name": "Magnium",
+        "url": "https://t.me/magniumtg"
+    },
+    "icon": "icon.png",
+    "entry": "main"
+}

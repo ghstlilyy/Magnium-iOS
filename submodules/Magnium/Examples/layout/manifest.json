@@ -1,0 +1,9 @@
+{
+    "id": "magnium.layout",
+    "name": "Раскладка",
+    "version": "1.0",
+    "description": "Исправляет текст, набранный не в той раскладке: «ghbdtn» → «привет». В меню сообщения и командами !ru / !en при отправке.",
+    "author": {"name": "Magnium", "url": "https://t.me/magniumtg"},
+    "icon": "icon.png",
+    "entry": "main"
+}

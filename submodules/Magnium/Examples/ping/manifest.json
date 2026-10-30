@@ -1,0 +1,12 @@
+{
+    "id": "magnium.ping",
+    "name": "Ping",
+    "version": "1.0",
+    "description": "Отвечает pong на !ping и показывает модель устройства по !device.",
+    "author": {
+        "name": "Magnium",
+        "url": "https://t.me/magniumtg"
+    },
+    "icon": "icon.png",
+    "entry": "main"
+}

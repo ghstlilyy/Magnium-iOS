@@ -1,0 +1,9 @@
+{
+    "id": "magnium.chatstats",
+    "name": "Статистика чата",
+    "version": "1.0",
+    "description": "«Статистика чата» в меню сообщения: кто пишет больше, любимые слова, самый активный час и день недели.",
+    "author": {"name": "Magnium", "url": "https://t.me/magniumtg"},
+    "icon": "icon.png",
+    "entry": "main"
+}

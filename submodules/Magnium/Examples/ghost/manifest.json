@@ -1,0 +1,9 @@
+{
+    "id": "magnium.ghost",
+    "name": "Призрак",
+    "version": "1.0",
+    "description": "Читайте, не отправляя отметок о прочтении, скрывайте «печатает…», онлайн и просмотры историй. Каждое скрывается отдельно.",
+    "author": {"name": "Magnium", "url": "https://t.me/magniumtg"},
+    "icon": "icon.png",
+    "entry": "main"
+}

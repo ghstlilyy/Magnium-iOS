@@ -1,0 +1,9 @@
+{
+    "id": "magnium.bookmarks",
+    "name": "Закладки",
+    "version": "1.0",
+    "description": "«В закладки» в меню любого сообщения. Все закладки — на странице плагина: текст, чат и время.",
+    "author": {"name": "Magnium", "url": "https://t.me/magniumtg"},
+    "icon": "icon.png",
+    "entry": "main"
+}

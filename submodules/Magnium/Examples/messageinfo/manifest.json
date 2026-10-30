@@ -1,0 +1,9 @@
+{
+    "id": "magnium.messageinfo",
+    "name": "Инфо о сообщении",
+    "version": "1.0",
+    "description": "Пункт «Информация» в меню сообщения: точное время, ID сообщения и чата, длина текста. Копирование ID в один тап.",
+    "author": {"name": "Magnium", "url": "https://t.me/magniumtg"},
+    "icon": "icon.png",
+    "entry": "main"
+}

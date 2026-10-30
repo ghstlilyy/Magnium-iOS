@@ -1,0 +1,9 @@
+{
+    "id": "magnium.shortcuts",
+    "name": "Быстрые команды",
+    "version": "1.0",
+    "description": "Пишете команду — отправляется результат: :shrug: → ¯\\_(ツ)_/¯, /roll, /coin, /8ball, /time, !mock, !up, !rev, !zalgo и другие.",
+    "author": {"name": "Magnium", "url": "https://t.me/magniumtg"},
+    "icon": "icon.png",
+    "entry": "main"
+}
